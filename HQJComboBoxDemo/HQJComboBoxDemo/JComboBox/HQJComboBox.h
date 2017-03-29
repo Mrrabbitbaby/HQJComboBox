@@ -87,8 +87,9 @@ typedef void(^JComboBoxHandleCompleteBlock)(NSString* groupId, NSInteger index, 
 /**
  点击回调方法
  
- @param finish 完成回调Block
+ @param groupId ID，请确保ID全局唯一性
+ @param finish  完成回调Block
  */
-+ (void)JComboBoxHandleCompleteFinish:(JComboBoxHandleCompleteBlock)finish;
++ (void)JComboBoxHandleCompleteWithGroupId:(NSString*)groupId finish:(JComboBoxHandleCompleteBlock)finish;
 
 @end

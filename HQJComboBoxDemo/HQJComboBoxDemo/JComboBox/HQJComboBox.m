@@ -38,8 +38,8 @@ static const char completeBlockKey;
         _JCButton.backgroundColor = [UIColor clearColor];
         //按钮高亮显示。
         _JCButton.adjustsImageWhenHighlighted = NO;
-        [_JCButton setImage:[UIImage imageNamed:@"RadioButton-Unselected"] forState:UIControlStateNormal];
-        [_JCButton setImage:[UIImage imageNamed:@"RadioButton-Selected"] forState:UIControlStateSelected];
+        [_JCButton setImage:[UIImage imageNamed:@"redio_nomarl"] forState:UIControlStateNormal];
+        [_JCButton setImage:[UIImage imageNamed:@"redio_selected"] forState:UIControlStateSelected];
         [_JCButton addTarget:self action:@selector(clickActionButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_JCButton];
         
@@ -108,7 +108,7 @@ static const char completeBlockKey;
 
 + (void)buttonSelect:(HQJComboBox*)JCBox
 {
-    JComboBoxHandleCompleteBlock block = objc_getAssociatedObject(self, &completeBlockKey);
+    JComboBoxHandleCompleteBlock block = objc_getAssociatedObject(JCBox.groupId, &completeBlockKey);
     if (block)
         block(JCBox.groupId, JCBox.index, JCBox.JCButton.isSelected);
     
@@ -128,9 +128,9 @@ static const char completeBlockKey;
         _JCButton.selected = NO;
 }
 
-+ (void)JComboBoxHandleCompleteFinish:(JComboBoxHandleCompleteBlock)finish
++ (void)JComboBoxHandleCompleteWithGroupId:(NSString*)groupId finish:(JComboBoxHandleCompleteBlock)finish
 {
-    objc_setAssociatedObject(self, &completeBlockKey, finish, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(groupId, &completeBlockKey, finish, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGSize)getCharactersWithFont:(UIFont *)font str:(NSString*)str
@@ -140,3 +140,4 @@ static const char completeBlockKey;
 }
 
 @end
+

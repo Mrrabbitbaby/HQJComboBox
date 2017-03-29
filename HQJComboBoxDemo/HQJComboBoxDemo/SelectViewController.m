@@ -63,7 +63,7 @@
     box3.isCancel = _style == JComboBoxStyleWithMultiselect ? YES : NO;
     box3.descrin = desc3;
     
-    [HQJComboBox JComboBoxHandleCompleteFinish:^(NSString *groupId, NSInteger index, BOOL selected) {
+    [HQJComboBox JComboBoxHandleCompleteWithGroupId:@"demo 1.0" finish:^(NSString *groupId, NSInteger index, BOOL selected) {
         NSLog(@"block : groupId:%@, index:%@, selected:%@",groupId, @(index), @(selected));
     }];
     
