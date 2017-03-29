@@ -38,8 +38,8 @@ static const char completeBlockKey;
         _JCButton.backgroundColor = [UIColor clearColor];
         //按钮高亮显示。
         _JCButton.adjustsImageWhenHighlighted = NO;
-        [_JCButton setImage:[UIImage imageNamed:@"redio_nomarl"] forState:UIControlStateNormal];
-        [_JCButton setImage:[UIImage imageNamed:@"redio_selected"] forState:UIControlStateSelected];
+        [_JCButton setImage:[UIImage imageNamed:@"RadioButton-Unselected"] forState:UIControlStateNormal];
+        [_JCButton setImage:[UIImage imageNamed:@"RadioButton-Selected"] forState:UIControlStateSelected];
         [_JCButton addTarget:self action:@selector(clickActionButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_JCButton];
         
