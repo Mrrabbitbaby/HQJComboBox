@@ -7,14 +7,13 @@
 //
 
 #import "HQJComboBox.h"
+#import <objc/runtime.h>
 
 static const CGFloat kJComboBoxButtonWidth = 25.0;
 static const CGFloat kJComboBoxButtonHeight = 25.0;
 
 static NSMutableArray* _ary_JComboBox;
-static NSMutableDictionary* _dict_observers;
-static NSMutableDictionary* _dict_style;
-static JComboBoxStyle _style;
+static const char completeBlockKey;
 
 @interface HQJComboBox()
 @property (nonatomic,strong)UILabel* lbl_descrin;
@@ -22,7 +21,6 @@ static JComboBoxStyle _style;
 @end
 
 @implementation HQJComboBox
-//@synthesize style = _style;
 
 //- (instancetype)initWithFrame:(CGRect)frame
 //{
@@ -35,12 +33,8 @@ static JComboBoxStyle _style;
 - (id)init
 {
     if (self = [super init]) {
-      
-        if (!_ary_JComboBox)
-            _ary_JComboBox = [NSMutableArray array];
-        
         _JCButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _JCButton.frame = CGRectMake(20, 0,kJComboBoxButtonWidth, kJComboBoxButtonHeight);
+        _JCButton.frame = CGRectMake(0, 0, kJComboBoxButtonWidth, kJComboBoxButtonHeight);
         _JCButton.backgroundColor = [UIColor clearColor];
         //按钮高亮显示。
         _JCButton.adjustsImageWhenHighlighted = NO;
@@ -49,6 +43,8 @@ static JComboBoxStyle _style;
         [_JCButton addTarget:self action:@selector(clickActionButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_JCButton];
         
+        if (!_ary_JComboBox)
+            _ary_JComboBox = [NSMutableArray array];
         [_ary_JComboBox addObject:self];
     }
     return self;
@@ -60,6 +56,7 @@ static JComboBoxStyle _style;
     if (self) {
         _groupId = groupId;
         _index = index;
+        _isCancel = NO;
         _style = JComboBoxStyleWithDefualt;
     }
     return self;
@@ -68,23 +65,33 @@ static JComboBoxStyle _style;
 - (void)setDescrin:(NSString *)descrin
 {
     _descrin = descrin;
+    CGSize size = [self getCharactersWithFont:[UIFont systemFontOfSize:18] str:_descrin];
+    
     if (!_lbl_descrin) {
         _lbl_descrin = [UILabel new];
-        _lbl_descrin.textColor = [UIColor colorWithRed:128 / 255.0 green:128 / 255.0 blue:128 / 255.0 alpha:1];        _lbl_descrin.font = [UIFont systemFontOfSize:(16)];
+        _lbl_descrin.font = [UIFont systemFontOfSize:18];
         _lbl_descrin.numberOfLines = 0;
         _lbl_descrin.backgroundColor = [UIColor clearColor];
         [self addSubview:_lbl_descrin];
     }
     _lbl_descrin.text = _descrin;
-    _lbl_descrin.frame = CGRectMake(_JCButton.frame.origin.x + _JCButton.frame.size.width + 5, _JCButton.frame.origin.y, self.frame.size.width - kJComboBoxButtonWidth - 35, self.frame.size.height);
+    _lbl_descrin.frame = CGRectMake(_JCButton.frame.origin.x + _JCButton.frame.size.width + 5, _JCButton.frame.origin.y, size.width + 10, size.height);//[UIScreen mainScreen].bounds.size.width - 50 - kJComboBoxButtonWidth
 }
 
-+ (void)setJComboBoxStyle:(JComboBoxStyle)style groupId:(NSString *)groupId
+/*
+ + (void)setJComboBoxStyle:(JComboBoxStyle)style
+ {
+ _style = style;
+ }
+ */
+- (void)setStyle:(JComboBoxStyle)style
 {
     _style = style;
-    if (!_dict_style)
-        _dict_style = [NSMutableDictionary dictionary];
-    [_dict_style setObject:@(_style) forKey:groupId];
+}
+
+- (void)setIsCancel:(BOOL)isCancel
+{
+    _isCancel = isCancel;
 }
 
 - (void)setButtonDefualtImage:(NSString *)defualtImage selectImage:(NSString *)selectImage
@@ -95,28 +102,24 @@ static JComboBoxStyle _style;
 
 - (void)clickActionButton:(id)sender
 {
-    _JCButton.selected = !_JCButton.selected;
+    _JCButton.selected = _isCancel ? !_JCButton.selected : YES;
     [HQJComboBox buttonSelect:self];
 }
 
 + (void)buttonSelect:(HQJComboBox*)JCBox
 {
-    if (_dict_observers) {
-        id observer = [_dict_observers objectForKey:JCBox.groupId];
-        if (observer && [observer respondsToSelector:@selector(handleJComboBoxTapCompleteIndex:groupId:selectStatu:)])
-            [observer handleJComboBoxTapCompleteIndex:JCBox.index groupId:JCBox.groupId selectStatu:JCBox.JCButton.selected];
-    }
+    JComboBoxHandleCompleteBlock block = objc_getAssociatedObject(self, &completeBlockKey);
+    if (block)
+        block(JCBox.groupId, JCBox.index, JCBox.JCButton.isSelected);
     
-    if (_dict_style)
-        if ([[_dict_style objectForKey:JCBox.groupId] integerValue] == JComboBoxStyleWithMultiselect)
-            return;
+    if (JCBox.style == JComboBoxStyleWithMultiselect)
+        return;
     
-    if (_ary_JComboBox) {
+    if (_ary_JComboBox)
         [_ary_JComboBox enumerateObjectsUsingBlock:^(HQJComboBox* otherJComboxBox, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (![otherJComboxBox isEqual:JCBox])
+            if (![otherJComboxBox isEqual:JCBox] && [otherJComboxBox.groupId isEqualToString:JCBox.groupId])
                 [otherJComboxBox otherJComboBoxButtonStatus:JCBox];
         }];
-    }
 }
 
 - (void)otherJComboBoxButtonStatus:(HQJComboBox*)JCBox
@@ -125,11 +128,15 @@ static JComboBoxStyle _style;
         _JCButton.selected = NO;
 }
 
-+ (void)addObserverForJComboBoxWithGroupId:(NSString*)groupId observer:(id)observer
++ (void)JComboBoxHandleCompleteFinish:(JComboBoxHandleCompleteBlock)finish
 {
-    if (!_dict_observers)
-        _dict_observers = [NSMutableDictionary dictionary];
-    [_dict_observers setObject:observer forKey:groupId];
+    objc_setAssociatedObject(self, &completeBlockKey, finish, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGSize)getCharactersWithFont:(UIFont *)font str:(NSString*)str
+{
+    CGSize size = [str boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - kJComboBoxButtonWidth - 20, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:font} context:NULL].size;
+    return size;
 }
 
 @end
