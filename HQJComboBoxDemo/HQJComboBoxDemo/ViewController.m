@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SelectViewController.h"
+#import "RedioViewController.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)UITableView* tb_JCB;
@@ -50,9 +51,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == 0) {
+        RedioViewController* redio = [[RedioViewController alloc]init];
+        redio.title = @"Radio";
+        [self.navigationController pushViewController:redio animated:YES];
+        return;
+    }
     SelectViewController* selt = [[SelectViewController alloc]init];
-    selt.title = indexPath.row ? @"Multiselect" : @"Radio";
-    selt.style = indexPath.row ? JComboBoxStyleWithMultiselect : JComboBoxStyleWithRadio;
+    selt.title = @"Multiselect";
     [self.navigationController pushViewController:selt animated:YES];
 }
 

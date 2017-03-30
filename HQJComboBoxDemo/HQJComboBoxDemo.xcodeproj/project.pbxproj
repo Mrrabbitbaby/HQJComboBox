@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A8805971E8CB27C00DE2EC6 /* RedioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8805961E8CB27C00DE2EC6 /* RedioViewController.m */; };
 		49D75A691E5ADA12006680F2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D75A681E5ADA12006680F2 /* main.m */; };
 		49D75A6C1E5ADA12006680F2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D75A6B1E5ADA12006680F2 /* AppDelegate.m */; };
 		49D75A6F1E5ADA12006680F2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49D75A6E1E5ADA12006680F2 /* ViewController.m */; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A8805951E8CB27C00DE2EC6 /* RedioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedioViewController.h; sourceTree = "<group>"; };
+		3A8805961E8CB27C00DE2EC6 /* RedioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedioViewController.m; sourceTree = "<group>"; };
 		49D75A641E5ADA12006680F2 /* HQJComboBoxDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQJComboBoxDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49D75A681E5ADA12006680F2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		49D75A6A1E5ADA12006680F2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 				49D75A6E1E5ADA12006680F2 /* ViewController.m */,
 				49D75A9A1E5ADC9A006680F2 /* SelectViewController.h */,
 				49D75A9B1E5ADC9A006680F2 /* SelectViewController.m */,
+				3A8805951E8CB27C00DE2EC6 /* RedioViewController.h */,
+				3A8805961E8CB27C00DE2EC6 /* RedioViewController.m */,
 				49D75AA81E5AE5A8006680F2 /* UIView+HQFrame.h */,
 				49D75AA91E5AE5A8006680F2 /* UIView+HQFrame.m */,
 				49D75A731E5ADA12006680F2 /* Assets.xcassets */,
@@ -302,6 +307,7 @@
 			files = (
 				49D75A9C1E5ADC9A006680F2 /* SelectViewController.m in Sources */,
 				49D75AAA1E5AE5A8006680F2 /* UIView+HQFrame.m in Sources */,
+				3A8805971E8CB27C00DE2EC6 /* RedioViewController.m in Sources */,
 				49D75A6F1E5ADA12006680F2 /* ViewController.m in Sources */,
 				49D75A6C1E5ADA12006680F2 /* AppDelegate.m in Sources */,
 				49D75A691E5ADA12006680F2 /* main.m in Sources */,
@@ -529,6 +535,7 @@
 				49D75A931E5ADA12006680F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		49D75A941E5ADA12006680F2 /* Build configuration list for PBXNativeTarget "HQJComboBoxDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -537,6 +544,7 @@
 				49D75A961E5ADA12006680F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		49D75A971E5ADA12006680F2 /* Build configuration list for PBXNativeTarget "HQJComboBoxDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -545,6 +553,7 @@
 				49D75A991E5ADA12006680F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

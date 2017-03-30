@@ -1,13 +1,13 @@
 //
-//  SelectViewController.h
+//  RedioViewController.h
 //  HQJComboBoxDemo
 //
-//  Created by 胡忠立 on 2017/2/20.
+//  Created by babyrabbit on 2017/3/30.
 //  Copyright © 2017年 mrrabbitBaby. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface SelectViewController : UIViewController
+@interface RedioViewController : UIViewController
 
 @end

@@ -32,35 +32,12 @@ typedef void(^JComboBoxHandleCompleteBlock)(NSString* groupId, NSInteger index, 
 
 @interface HQJComboBox : UIView
 
-/**
- 群组ID
- */
-@property (nonatomic,copy,readonly)NSString* groupId;
-
-/**
- 点击下标
- */
-@property (nonatomic,assign,readonly)NSInteger index;
-
-/**
- 按钮
- */
-@property (nonatomic,strong,readonly)UIButton* JCButton;
-
-/**
- 描述
- */
-@property (nonatomic,copy)NSString* descrin;
-
-/**
- 多选或单选
- */
-@property (nonatomic)JComboBoxStyle style;
-
-/**
- 按钮是否可变成不选状态
- */
-@property (nonatomic) BOOL isCancel;
+@property (nonatomic,copy,readonly)NSString* groupId;/**群组ID*/
+@property (nonatomic,assign,readonly)NSInteger index;/**点击下标*/
+@property (nonatomic,strong,readonly)UIButton* JCButton;/**按钮*/
+@property (nonatomic,copy)NSString* descrin;/**描述*/
+@property (nonatomic)JComboBoxStyle style;/**多选或单选*/
+@property (nonatomic) BOOL isCancel;/**按钮是否可变成不选状态*/
 
 /**
  不可用初始化方法
@@ -87,9 +64,8 @@ typedef void(^JComboBoxHandleCompleteBlock)(NSString* groupId, NSInteger index, 
 /**
  点击回调方法
  
- @param groupId ID，请确保ID全局唯一性
  @param finish  完成回调Block
  */
-+ (void)JComboBoxHandleCompleteWithGroupId:(NSString*)groupId finish:(JComboBoxHandleCompleteBlock)finish;
++ (void)JComboBoxHandleCompleteWithFinish:(JComboBoxHandleCompleteBlock)finish;
 
 @end
