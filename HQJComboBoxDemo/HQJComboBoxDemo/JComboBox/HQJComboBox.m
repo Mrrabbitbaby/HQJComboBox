@@ -7,14 +7,12 @@
 //
 
 #import "HQJComboBox.h"
-#import <objc/runtime.h>
 
 static const CGFloat kJComboBoxButtonWidth = 25.0;
 static const CGFloat kJComboBoxButtonHeight = 25.0;
 
 static NSMutableArray* _ary_JComboBox;
-static const char completeBlockKey;
-static HQJComboBox* _manager = nil;
+static NSMutableDictionary* _dict_observer;
 
 @interface HQJComboBox()
 @property (nonatomic,strong)UILabel* lbl_descrin;
@@ -59,7 +57,6 @@ static HQJComboBox* _manager = nil;
         _index = index;
         _isCancel = NO;
         _style = JComboBoxStyleWithDefualt;
-        _manager = self;
     }
     return self;
 }
@@ -73,7 +70,6 @@ static HQJComboBox* _manager = nil;
         _lbl_descrin = [UILabel new];
         _lbl_descrin.font = [UIFont systemFontOfSize:18];
         _lbl_descrin.numberOfLines = 0;
-        _lbl_descrin.backgroundColor = [UIColor clearColor];
         [self addSubview:_lbl_descrin];
     }
     _lbl_descrin.text = _descrin;
@@ -104,9 +100,11 @@ static HQJComboBox* _manager = nil;
 
 + (void)buttonSelect:(HQJComboBox*)JCBox
 {
-    JComboBoxHandleCompleteBlock block = objc_getAssociatedObject([HQJComboBox getObserver], &completeBlockKey);
-    if (block)
-        block(JCBox.groupId, JCBox.index, JCBox.JCButton.isSelected);
+    if (_dict_observer) {
+        id observer = [_dict_observer objectForKey:JCBox.groupId];
+        if (observer && [observer respondsToSelector:@selector(JComboBoxHandleCompleteWithGroupId:index:selected:)])
+            [observer JComboBoxHandleCompleteWithGroupId:JCBox.groupId index:JCBox.index selected:JCBox.JCButton.selected];
+    }
     
     if (JCBox.style == JComboBoxStyleWithMultiselect)
         return;
@@ -124,27 +122,17 @@ static HQJComboBox* _manager = nil;
         _JCButton.selected = NO;
 }
 
-+ (void)JComboBoxHandleCompleteWithFinish:(JComboBoxHandleCompleteBlock)finish
++ (void)addObserverWithJComboBoxWithObserver:(id)observer groupId:(NSString *)groupId
 {
-    objc_setAssociatedObject([HQJComboBox getObserver], &completeBlockKey, finish, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!_dict_observer)
+        _dict_observer = [NSMutableDictionary dictionary];
+    [_dict_observer setObject:observer forKey:groupId];
 }
 
 - (CGSize)getCharactersWithFont:(UIFont *)font str:(NSString*)str
 {
     CGSize size = [str boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - kJComboBoxButtonWidth - 20, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:font} context:NULL].size;
     return size;
-}
-
-+ (UIViewController *)getObserver
-{
-    //发现视图的视图控制器。
-    //遍历响应者链。返回第一个找到视图控制器,视图的视图控制器。
-    UIResponder *responder = _manager;
-    while ((responder = [responder nextResponder]))
-        if ([responder isKindOfClass: [UIViewController class]])
-            return (UIViewController *)responder;
-    // 没有找到返回Nil
-    return nil;
 }
 
 @end

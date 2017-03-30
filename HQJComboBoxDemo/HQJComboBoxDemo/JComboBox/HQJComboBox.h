@@ -21,14 +21,16 @@ typedef NS_ENUM(NSInteger, JComboBoxStyle) {
     JComboBoxStyleWithDefualt = JComboBoxStyleWithRadio
 };
 
+@protocol JComboBoxDelegate <NSObject>
 /**
- 点击回调Block
+ 点击回调
  
  @param groupId 群组Id
  @param index 点击下标
  @param selected 选中与否状态
  */
-typedef void(^JComboBoxHandleCompleteBlock)(NSString* groupId, NSInteger index, BOOL selected);
+- (void)JComboBoxHandleCompleteWithGroupId:(NSString*)groupId index:(NSInteger)index selected:(BOOL)selected;
+@end
 
 @interface HQJComboBox : UIView
 
@@ -62,10 +64,11 @@ typedef void(^JComboBoxHandleCompleteBlock)(NSString* groupId, NSInteger index, 
 - (void)setButtonDefualtImage:(NSString*)defualtImage selectImage:(NSString*)selectImage;
 
 /**
- 点击回调方法
+ 设置接收者
  
- @param finish  完成回调Block
+ @param observer 接收者
+ @param groupId 组群ID
  */
-+ (void)JComboBoxHandleCompleteWithFinish:(JComboBoxHandleCompleteBlock)finish;
++ (void)addObserverWithJComboBoxWithObserver:(id)observer groupId:(NSString*)groupId;
 
 @end

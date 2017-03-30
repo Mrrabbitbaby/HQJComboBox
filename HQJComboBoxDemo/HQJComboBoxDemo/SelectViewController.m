@@ -10,7 +10,7 @@
 #import "UIView+HQFrame.h"
 #import "HQJComboBox.h"
 
-@interface SelectViewController ()
+@interface SelectViewController ()<JComboBoxDelegate>
 
 @end
 
@@ -62,17 +62,18 @@
     box3.descrin = desc3;
     box3.style = JComboBoxStyleWithMultiselect;
     [self.view addSubview:box3];
-
-    [HQJComboBox JComboBoxHandleCompleteWithFinish:^(NSString *groupId, NSInteger index, BOOL selected) {
-        NSLog(@"MultiselectBlock : groupId:%@, index:%@, selected:%@",groupId, @(index), @(selected));
-    }];
-    
+    [HQJComboBox addObserverWithJComboBoxWithObserver:self groupId:@"demo 1.0"];
     // Do any additional setup after loading the view.
 }
 
 - (CGSize)getCharactersWithString:(NSString*)str
 {
     return [str boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 45, MAXFLOAT) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:NULL].size;
+}
+
+- (void)JComboBoxHandleCompleteWithGroupId:(NSString *)groupId index:(NSInteger)index selected:(BOOL)selected
+{
+    NSLog(@"mutableBlock : groupId:%@, index:%@, selected:%@",groupId, @(index), @(selected));
 }
 
 - (void)didReceiveMemoryWarning {
